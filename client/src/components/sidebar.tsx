@@ -17,6 +17,8 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
     { id: 'portfolio', label: 'Portfolio', icon: 'fas fa-wallet' },
     { id: 'transactions', label: 'Transactions', icon: 'fas fa-history' },
     { id: 'explorer', label: 'Block Explorer', icon: 'fas fa-search' },
+    { id: 'analytics', label: 'Blockchain Analytics', icon: 'fas fa-chart-bar' },
+    { id: 'networks', label: 'Network Switcher', icon: 'fas fa-network-wired' },
   ];
 
   return (

@@ -1,2 +1,17 @@
+# Dependencies
+node_modules
 node_modules/
+**/node_modules
+**/node_modules/
+
+# Server
+server
 server/
+**/server
+**/server/
+
+# Deployment
+deploy-testnet
+deploy-testnet/
+**/deploy-testnet
+**/deploy-testnet/

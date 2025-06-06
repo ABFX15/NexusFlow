@@ -3,60 +3,61 @@
 @tailwind utilities;
 
 :root {
-  --background: 218 23% 14%; /* #1A1B23 - crypto-dark */
+  --background: 230 35% 7%; /* #0A0E1A - deeper cosmic blue */
   --foreground: 0 0% 100%;
-  --muted: 220 13% 26%; /* #374151 - crypto-card */
-  --muted-foreground: 210 10% 64%;
-  --popover: 218 23% 14%;
+  --muted: 225 30% 15%; /* #1E2439 - elevated card */
+  --muted-foreground: 210 15% 70%;
+  --popover: 230 35% 7%;
   --popover-foreground: 0 0% 100%;
-  --card: 220 13% 26%;
+  --card: 225 30% 15%;
   --card-foreground: 0 0% 100%;
-  --border: 220 9% 46%;
-  --input: 220 13% 26%;
-  --primary: 249 51% 58%; /* #7C3AED - crypto-purple */
+  --border: 220 25% 25%;
+  --input: 225 30% 15%;
+  --primary: 270 100% 70%; /* #8B5CF6 - vibrant purple */
   --primary-foreground: 0 0% 100%;
-  --secondary: 220 13% 26%;
+  --secondary: 225 30% 15%;
   --secondary-foreground: 0 0% 100%;
-  --accent: 186 100% 44%; /* #06B6D4 - crypto-cyan */
+  --accent: 190 100% 50%; /* #00BFFF - electric cyan */
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%; /* #EF4444 - crypto-red */
+  --destructive: 0 90% 65%; /* #FF4757 - vibrant red */
   --destructive-foreground: 0 0% 100%;
-  --ring: 249 51% 58%;
+  --ring: 270 100% 70%;
   --radius: 0.75rem;
-  --crypto-dark: 218 23% 14%;
-  --crypto-card: 220 13% 26%;
-  --crypto-purple: 249 51% 58%;
-  --crypto-green: 158 64% 52%; /* #10B981 */
-  --crypto-red: 0 84% 60%;
-  --crypto-cyan: 186 100% 44%;
-  --crypto-amber: 43 96% 56%; /* #F59E0B */
+  --crypto-dark: 230 35% 7%;
+  --crypto-card: 225 30% 15%;
+  --crypto-purple: 270 100% 70%;
+  --crypto-green: 145 85% 55%; /* #2DD4BF - electric teal */
+  --crypto-red: 0 90% 65%;
+  --crypto-cyan: 190 100% 50%;
+  --crypto-amber: 45 100% 60%; /* #FBBF24 - golden amber */
+  --crypto-pink: 320 100% 70%; /* #F472B6 - hot pink */
 }
 
 .dark {
-  --background: 218 23% 14%;
+  --background: 230 35% 7%;
   --foreground: 0 0% 100%;
-  --muted: 220 13% 26%;
-  --muted-foreground: 210 10% 64%;
-  --popover: 218 23% 14%;
+  --muted: 225 30% 15%;
+  --muted-foreground: 210 15% 70%;
+  --popover: 230 35% 7%;
   --popover-foreground: 0 0% 100%;
-  --card: 220 13% 26%;
+  --card: 225 30% 15%;
   --card-foreground: 0 0% 100%;
-  --border: 220 9% 46%;
-  --input: 220 13% 26%;
-  --primary: 249 51% 58%;
+  --border: 220 25% 25%;
+  --input: 225 30% 15%;
+  --primary: 270 100% 70%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 220 13% 26%;
+  --secondary: 225 30% 15%;
   --secondary-foreground: 0 0% 100%;
-  --accent: 186 100% 44%;
+  --accent: 190 100% 50%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
+  --destructive: 0 90% 65%;
   --destructive-foreground: 0 0% 100%;
-  --ring: 249 51% 58%;
+  --ring: 270 100% 70%;
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
@@ -81,6 +82,47 @@
   
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .nexus-shimmer {
+    animation: shimmer 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .nexus-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .nexus-particles::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(0, 212, 255, 0.3), transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(82, 0, 255, 0.3), transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(255, 0, 128, 0.3), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(0, 212, 255, 0.3), transparent);
+    background-repeat: repeat;
+    background-size: 150px 100px;
+    animation: particles 20s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes particles {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-150px, -100px); }
   }
 }
 

@@ -9,6 +9,8 @@ import { TransactionHistory } from "@/components/transaction-history";
 import { VaultManagement } from "@/components/vault-management";
 import { NetworkInfo } from "@/components/network-info";
 import { BlockscoutExplorer } from "@/components/blockscout-explorer";
+import { BlockchainAnalytics } from "@/components/blockchain-analytics";
+import { NetworkSwitcher } from "@/components/network-switcher";
 import { MeritDashboard } from "@/components/merit-dashboard";
 import { TradingInterface } from "@/components/trading-interface";
 import { SwapTracker } from "@/components/swap-tracker";
@@ -59,6 +61,13 @@ export default function Dashboard() {
 
       case 'explorer':
         return <BlockscoutExplorer />;
+      
+      case 'analytics':
+        return <BlockchainAnalytics />;
+      
+      case 'networks':
+        return <NetworkSwitcher />;
+        
       default:
         return (
           <div className="text-center py-12">

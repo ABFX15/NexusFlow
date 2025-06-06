@@ -6,11 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount, useBalance, useChainId } from 'wagmi';
 import { apiRequest } from "@/lib/queryClient";
 import { POPULAR_TOKENS } from "@/lib/constants";
 import { useSwapTracker } from "@/hooks/useContracts";
 import { TOKEN_ADDRESSES } from "@/lib/contracts";
+import { TokenLogo } from "@/components/token-logos";
 
 interface SwapData {
   fromToken: string;
@@ -33,6 +34,7 @@ export function TokenSwap() {
 
   const { toast } = useToast();
   const { address, isConnected } = useAccount();
+  const chainId = useChainId();
   
   // Get ETH balance using Wagmi
   const { data: ethBalance } = useBalance({
@@ -47,8 +49,8 @@ export function TokenSwap() {
 
   // Fetch token balances
   const { data: balances } = useQuery({
-    queryKey: ['/api/wallet/balances', address],
-    queryFn: () => apiRequest('POST', '/api/wallet/balances', { walletAddress: address }),
+    queryKey: ['/api/wallet/balances', address, chainId],
+    queryFn: () => apiRequest('POST', '/api/wallet/balances', { walletAddress: address, chainId: chainId }),
     enabled: isConnected && !!address,
   });
 
@@ -131,9 +133,7 @@ export function TokenSwap() {
               <Select value={swapData.fromToken} onValueChange={(value) => setSwapData(prev => ({ ...prev, fromToken: value }))}>
                 <SelectTrigger className="w-auto bg-gray-600 border-gray-500">
                   <div className="flex items-center space-x-2">
-                    {getTokenIcon(swapData.fromToken) && (
-                      <img src={getTokenIcon(swapData.fromToken)} alt={swapData.fromToken} className="w-6 h-6 rounded-full" />
-                    )}
+                    <TokenLogo symbol={swapData.fromToken} className="w-6 h-6" />
                     <span className="font-medium">{swapData.fromToken}</span>
                   </div>
                 </SelectTrigger>
@@ -141,7 +141,7 @@ export function TokenSwap() {
                   {POPULAR_TOKENS.map((token) => (
                     <SelectItem key={token.symbol} value={token.symbol}>
                       <div className="flex items-center space-x-2">
-                        <img src={token.logoUrl} alt={token.symbol} className="w-5 h-5 rounded-full" />
+                        <TokenLogo symbol={token.symbol} className="w-5 h-5" />
                         <span>{token.symbol}</span>
                       </div>
                     </SelectItem>
@@ -163,14 +163,18 @@ export function TokenSwap() {
         </div>
 
         {/* Swap Arrow */}
-        <div className="flex justify-center">
+        <div className="flex justify-center relative">
           <Button
             variant="ghost"
             size="icon"
             onClick={reverseSwap}
-            className="w-10 h-10 crypto-gradient rounded-full hover:opacity-80"
+            className="w-12 h-12 crypto-gradient rounded-full hover:opacity-80 transition-all duration-200 hover:scale-110"
           >
-            <i className="fas fa-arrow-down text-white"></i>
+            <div className="flex flex-col items-center">
+              <TokenLogo symbol={swapData.fromToken} className="w-4 h-4 mb-1" />
+              <i className="fas fa-exchange-alt text-white text-xs"></i>
+              <TokenLogo symbol={swapData.toToken} className="w-4 h-4 mt-1" />
+            </div>
           </Button>
         </div>
 
@@ -182,9 +186,7 @@ export function TokenSwap() {
               <Select value={swapData.toToken} onValueChange={(value) => setSwapData(prev => ({ ...prev, toToken: value }))}>
                 <SelectTrigger className="w-auto bg-gray-600 border-gray-500">
                   <div className="flex items-center space-x-2">
-                    {getTokenIcon(swapData.toToken) && (
-                      <img src={getTokenIcon(swapData.toToken)} alt={swapData.toToken} className="w-6 h-6 rounded-full" />
-                    )}
+                    <TokenLogo symbol={swapData.toToken} className="w-6 h-6" />
                     <span className="font-medium">{swapData.toToken}</span>
                   </div>
                 </SelectTrigger>
@@ -192,7 +194,7 @@ export function TokenSwap() {
                   {POPULAR_TOKENS.map((token) => (
                     <SelectItem key={token.symbol} value={token.symbol}>
                       <div className="flex items-center space-x-2">
-                        <img src={token.logoUrl} alt={token.symbol} className="w-5 h-5 rounded-full" />
+                        <TokenLogo symbol={token.symbol} className="w-5 h-5" />
                         <span>{token.symbol}</span>
                       </div>
                     </SelectItem>
