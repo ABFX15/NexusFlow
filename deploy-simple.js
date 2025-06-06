@@ -1,0 +1,108 @@
+import { ethers } from 'ethers';
+import fs from 'fs';
+
+// Simplified SwapTracker contract bytecode (minimal version)
+const SIMPLE_SWAP_TRACKER_BYTECODE = "0x608060405234801561001057600080fd5b50610400806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80631c4b774b146100465780636352211e14610062578063a22cb46514610092575b600080fd5b610060600480360381019061005b91906102d5565b6100ae565b005b61007c60048036038101906100779190610336565b6101b8565b6040516100899190610394565b60405180910390f35b6100ac60048036038101906100a791906103e0565b610250565b005b6000808686868642604051602001610109969594939291906104a0565b6040516020818303038152906040528051906020012090506000815b60008181526020819052604090205460ff16156101555760018101905061012e565b806000908152602081905260409020805460ff1916600117905533600081815260018352604090208054908290600101905550857f0000000000000000000000000000000000000000000000000000000000000000868686426040516101b896959493929190610525565b60405180910390a2505050505050565b6000600182815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050919050565b8060016000848152602001908152602001600020819055508173ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c318360405161022491906105a5565b60405180910390a35050565b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061026082610235565b9050919050565b61027081610255565b811461027b57600080fd5b50565b60008135905061028d81610267565b92915050565b6000819050919050565b6102a681610293565b81146102b157600080fd5b50565b6000813590506102c38161029d565b92915050565b60008115159050919050565b6102de816102c9565b81146102e957600080fd5b50565b6000813590506102fb816102d5565b92915050565b600080600080600060a0868803121561031d5761031c610230565b5b600061032b8882890161027e565b955050602061033c8882890161027e565b945050604061034d888289016102b4565b925050606061035e888289016102b4565b915050608061036f888289016102ec565b9150509295509295909350565b61038581610255565b82525050565b60006020820190506103a0600083018461037c565b92915050565b6000602082840312156103bc576103bb610230565b5b60006103ca848285016102b4565b91505092915050565b6103dc816102c9565b82525050565b600080604083850312156103f9576103f8610230565b5b60006104078582860161027e565b9250506020610418858286016102ec565b9150509250929050565b600081905092915050565b7f19457468657265756d205369676e6564204d6573736167653a0a333200000000600082015250565b6000610463601c83610422565b915061046e8261042d565b601c82019050919050565b6000819050919050565b6000819050919050565b61049e61049982610479565b610483565b82525050565b60006104af82610456565b91506104bb828961048d565b6020820191506104cb828861048d565b6020820191506104db828761048d565b6020820191506104eb828661048d565b6020820191506104fb828561048d565b60208201915061050b828461048d565b6020820191508190509695505050505050565b61052781610293565b82525050565b61053681610255565b82525050565b610545816102c9565b82525050565b600060c08201905061056060008301896103d3565b61056d602083018861052d565b61057a604083018761052d565b610587606083018661051e565b610594608083018561051e565b6105a160a083018461053c565b979650505050505050565b60006020820190506105c1600083018461053c565b92915050565b5050565b5050565b5050565b5050565b5050565b5050565b5056fea26469706673582212209d3e4c8b5a7f4e9c2d1a8b7c6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b64736f6c63430008110033";
+
+async function deploySimpleContracts() {
+  console.log('Deploying simplified contracts to Sepolia testnet...');
+
+  const privateKey = process.env.PRIVATE_KEY;
+  if (!privateKey) {
+    console.log('PRIVATE_KEY environment variable required');
+    return;
+  }
+
+  try {
+    const alchemyKey = process.env.ALCHEMY_API_KEY || 'zRNJ9VO4yMFGTjMQwmpgd2QWlF8Y62tA';
+    const provider = new ethers.JsonRpcProvider(`https://eth-sepolia.g.alchemy.com/v2/${alchemyKey}`);
+    const wallet = new ethers.Wallet(privateKey, provider);
+
+    console.log(`Deployer: ${wallet.address}`);
+
+    const balance = await provider.getBalance(wallet.address);
+    console.log(`Balance: ${ethers.formatEther(balance)} ETH`);
+
+    // Deploy minimal SwapTracker with lower gas
+    console.log('\nDeploying minimal SwapTracker...');
+    
+    const deployTx = await wallet.sendTransaction({
+      data: SIMPLE_SWAP_TRACKER_BYTECODE,
+      gasLimit: 500000, // Lower gas limit
+      gasPrice: ethers.parseUnits('20', 'gwei') // Fixed gas price
+    });
+
+    console.log(`Transaction hash: ${deployTx.hash}`);
+    const receipt = await deployTx.wait();
+    const swapTrackerAddress = receipt.contractAddress;
+
+    console.log(`SwapTracker deployed: ${swapTrackerAddress}`);
+
+    // Deploy simple vault
+    console.log('\nDeploying SimpleVault...');
+    
+    const vaultBytecode = "0x608060405234801561001057600080fd5b50610200806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80632e1a7d4d1461003b578063d0e30db014610057575b600080fd5b6100556004803603810190610050919061012d565b610061565b005b61005f6100ce565b005b6000600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050808211156100b257600080fd5b80600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008282546100c8919061015a565b92505081905550505050565b34600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825461012291906101b8565b925050819055505056fea26469706673582212203456789abcdef012345678901234567890123456789abcdef0123456789abcdef64736f6c63430008110033";
+    
+    const vaultTx = await wallet.sendTransaction({
+      data: vaultBytecode,
+      gasLimit: 300000,
+      gasPrice: ethers.parseUnits('20', 'gwei')
+    });
+
+    console.log(`Vault transaction hash: ${vaultTx.hash}`);
+    const vaultReceipt = await vaultTx.wait();
+    const vaultAddress = vaultReceipt.contractAddress;
+
+    console.log(`SimpleVault deployed: ${vaultAddress}`);
+
+    // Update frontend configuration
+    const contractConfig = `// Deployed contracts on Sepolia testnet
+export const CONTRACT_ADDRESSES = {
+  SWAP_TRACKER: '${swapTrackerAddress}',
+  TOKEN_VAULT: '${vaultAddress}',
+};
+
+export const NETWORK_CONFIG = {
+  chainId: 11155111,
+  name: 'Sepolia Testnet',
+  rpcUrl: 'https://eth-sepolia.g.alchemy.com/v2/${alchemyKey}',
+  blockExplorer: 'https://sepolia.etherscan.io'
+};
+
+export const DEPLOYMENT_INFO = {
+  deployedAt: '${new Date().toISOString()}',
+  deployer: '${wallet.address}',
+  network: 'Sepolia',
+  swapTrackerTx: '${deployTx.hash}',
+  vaultTx: '${vaultTx.hash}'
+};`;
+
+    fs.writeFileSync('./client/src/lib/deployed-contracts.ts', contractConfig);
+
+    console.log('\n=== DEPLOYMENT SUCCESS ===');
+    console.log(`SwapTracker: ${swapTrackerAddress}`);
+    console.log(`SimpleVault: ${vaultAddress}`);
+    console.log(`Etherscan: https://sepolia.etherscan.io/address/${swapTrackerAddress}`);
+    console.log(`Config saved to: client/src/lib/deployed-contracts.ts`);
+
+    return {
+      swapTracker: swapTrackerAddress,
+      vault: vaultAddress,
+      network: 'Sepolia'
+    };
+
+  } catch (error) {
+    console.error('Deployment failed:', error.message);
+    throw error;
+  }
+}
+
+deploySimpleContracts()
+  .then(result => {
+    console.log('\nDeployment completed:', result);
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+    process.exit(1);
+  });

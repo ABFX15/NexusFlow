@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 218 23% 14%; /* #1A1B23 - crypto-dark */
+  --foreground: 0 0% 100%;
+  --muted: 220 13% 26%; /* #374151 - crypto-card */
+  --muted-foreground: 210 10% 64%;
+  --popover: 218 23% 14%;
+  --popover-foreground: 0 0% 100%;
+  --card: 220 13% 26%;
+  --card-foreground: 0 0% 100%;
+  --border: 220 9% 46%;
+  --input: 220 13% 26%;
+  --primary: 249 51% 58%; /* #7C3AED - crypto-purple */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 13% 26%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 186 100% 44%; /* #06B6D4 - crypto-cyan */
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%; /* #EF4444 - crypto-red */
+  --destructive-foreground: 0 0% 100%;
+  --ring: 249 51% 58%;
+  --radius: 0.75rem;
+  --crypto-dark: 218 23% 14%;
+  --crypto-card: 220 13% 26%;
+  --crypto-purple: 249 51% 58%;
+  --crypto-green: 158 64% 52%; /* #10B981 */
+  --crypto-red: 0 84% 60%;
+  --crypto-cyan: 186 100% 44%;
+  --crypto-amber: 43 96% 56%; /* #F59E0B */
+}
+
+.dark {
+  --background: 218 23% 14%;
+  --foreground: 0 0% 100%;
+  --muted: 220 13% 26%;
+  --muted-foreground: 210 10% 64%;
+  --popover: 218 23% 14%;
+  --popover-foreground: 0 0% 100%;
+  --card: 220 13% 26%;
+  --card-foreground: 0 0% 100%;
+  --border: 220 9% 46%;
+  --input: 220 13% 26%;
+  --primary: 249 51% 58%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 13% 26%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 186 100% 44%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 249 51% 58%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  }
+}
+
+@layer utilities {
+  .crypto-gradient {
+    background: linear-gradient(135deg, hsl(var(--crypto-purple)), hsl(var(--crypto-cyan)));
+  }
+  
+  .crypto-card {
+    background: hsl(var(--crypto-card));
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+/* NexusFlow Brand Styles */
+.nexus-gradient {
+  background: linear-gradient(135deg, #00D4FF 0%, #5200FF 50%, #FF0080 100%);
+}
+
+.nexus-card {
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.nexus-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.nexus-card:hover::before {
+  left: 100%;
+}
+
+.nexus-card:hover {
+  border-color: rgba(0, 212, 255, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nexus-bg {
+  background: linear-gradient(135deg, #00D4FF 0%, #5200FF 50%, #FF0080 100%);
+}
+
+.nexus-glow {
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+  animation: nexusGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes nexusGlow {
+  from { filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5)); }
+  to { filter: drop-shadow(0 0 20px rgba(82, 0, 255, 0.8)); }
+}
+
+.nexus-pulse {
+  animation: nexusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes nexusPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.nexus-spinner {
+  animation: nexusSpin 1s linear infinite;
+}
+
+@keyframes nexusSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.nexus-button {
+  background: linear-gradient(135deg, #00D4FF 0%, #5200FF 50%, #FF0080 100%);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.nexus-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.nexus-button:hover::before {
+  left: 100%;
+}
+
+.nexus-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+}
+
+.nexus-stat-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nexus-stat-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nexus-stat-card:hover::before {
+  opacity: 1;
+}
+
+.nexus-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(82, 0, 255, 0.6);
+}
+
+.nexus-counter {
+  background: linear-gradient(45deg, #00D4FF, #5200FF, #FF0080);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: nexusShimmer 3s ease-in-out infinite;
+}
+
+@keyframes nexusShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.nexus-progress .bg-primary {
+  background: linear-gradient(90deg, #00D4FF 0%, #5200FF 50%, #FF0080 100%);
+  animation: nexusProgress 2s ease-in-out infinite;
+}
+
+@keyframes nexusProgress {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
+}
+
+.nexus-reward-display {
+  position: relative;
+  padding: 2rem;
+  border-radius: 20px;
+  background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+}
+
+.nexus-reward-display::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(45deg, #00D4FF, #5200FF, #FF0080);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  animation: nexusBorder 3s linear infinite;
+}
+
+@keyframes nexusBorder {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
